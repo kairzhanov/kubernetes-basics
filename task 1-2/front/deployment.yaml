@@ -1,0 +1,35 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: todo-front
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3200
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: todo-front
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: todo-front
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todo-front
+  template:
+    metadata:
+      labels:
+        app: todo-front
+    spec:
+      containers:
+        - name: todo-front
+          image: todo-front:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
